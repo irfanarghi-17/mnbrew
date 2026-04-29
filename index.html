@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#3B1F0E"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Brew Guide"/>
+<meta name="description" content="Manual brew coffee guide with step-by-step recipes and built-in timer for V60, Chemex, French Press, AeroPress, Moka Pot, Cold Brew, and Siphon."/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
+<title>Manual Brew Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --brown-900: #1C0A02;
+  --brown-800: #3B1F0E;
+  --brown-700: #5C3118;
+  --brown-600: #8B5E3C;
+  --brown-500: #B07D55;
+  --brown-400: #C48A5A;
+  --brown-200: #E8D5C0;
+  --brown-100: #F5EBE0;
+  --brown-50:  #FDF8F4;
+  --cream: #FFFDF9;
+  --text-primary: #1C0A02;
+  --text-secondary: #6B4C35;
+  --text-muted: #9E7B62;
+  --border: rgba(139,94,60,0.18);
+  --border-strong: rgba(139,94,60,0.32);
+  --surface: #FFFFFF;
+  --surface-alt: #FDF8F4;
+  --shadow-sm: 0 1px 4px rgba(60,20,0,0.07);
+  --shadow-md: 0 4px 20px rgba(60,20,0,0.10);
+  --radius: 14px;
+  --radius-sm: 9px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--brown-50);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TOP HEADER ── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--brown-800);
+  padding: calc(var(--safe-top) + 14px) 20px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+
+.app-header-icon {
+  width: 34px; height: 34px;
+  background: var(--brown-600);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.app-header-icon svg { width: 20px; height: 20px; }
+
+.app-header-text h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--brown-100);
+  letter-spacing: -0.2px;
+}
+
+.app-header-text h1 em { font-style: italic; color: var(--brown-400); }
+
+.app-header-text p {
+  font-size: 11px;
+  color: var(--brown-400);
+  font-weight: 300;
+  letter-spacing: 0.3px;
+  margin-top: 1px;
+}
+
+/* ── MAIN SCROLL AREA ── */
+.main {
+  padding: 16px 16px calc(var(--safe-bot) + 32px);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.card-body { padding: 18px 16px; }
+
+.card-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+/* ── FORM ELEMENTS ── */
+.form-row { margin-bottom: 13px; }
+.form-row:last-child { margin-bottom: 0; }
+
+.form-row label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  margin-bottom: 6px;
+}
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--brown-500);
+  pointer-events: none;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+select { padding-right: 38px; cursor: pointer; }
+
+select:focus, input[type="number"]:focus {
+  border-color: var(--brown-500);
+  box-shadow: 0 0 0 3px rgba(139,94,60,0.12);
+  background: #fff;
+}
+
+.grind-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--brown-600);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ── GENERATE BUTTON ── */
+.brew-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--brown-800);
+  color: var(--brown-100);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.brew-btn:active { transform: scale(0.985); background: var(--brown-700); }
+.brew-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ── GUIDE SECTION ── */
+#guideSection { display: none; }
+#guideSection.visible { display: block; }
+
+/* ── RECIPE HEADER ── */
+.recipe-header {
+  background: var(--brown-800);
+  padding: 20px 16px 16px;
+}
+
+.origin-pill {
+  display: inline-block;
+  font-size: 11px;
+  background: rgba(255,255,255,0.12);
+  color: var(--brown-200);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.recipe-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--brown-100);
+  line-height: 1.2;
+}
+
+.recipe-subtitle {
+  font-size: 13px;
+  color: var(--brown-400);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+/* ── STATS GRID ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.stat-box {
+  background: var(--surface);
+  padding: 14px 8px 12px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--brown-700);
+  line-height: 1;
+}
+
+.stat-unit {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── NOTES ── */
+.taste-notes {
+  margin: 14px 16px;
+  padding: 13px 14px;
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--brown-500);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.taste-notes strong { color: var(--text-primary); font-weight: 500; }
+
+/* ── STEPS ── */
+.steps-section { padding: 4px 16px 16px; }
+
+.steps-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.step-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+
+.step-item:last-child { margin-bottom: 0; }
+
+.step-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--brown-800);
+  color: var(--brown-100);
+  font-size: 12px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-content { flex: 1; min-width: 0; }
+.step-name { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+.step-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.step-time { font-size: 12px; color: var(--brown-600); font-weight: 500; margin-top: 4px; }
+
+/* ── TIMER ── */
+.timer-card .card-body { padding: 20px 16px; text-align: center; }
+
+.timer-top-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.timer-phase {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  color: var(--text-primary);
+  min-height: 26px;
+  margin-bottom: 4px;
+}
+
+.timer-display {
+  font-size: 62px;
+  font-weight: 300;
+  color: var(--brown-700);
+  letter-spacing: -3px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin: 6px 0 14px;
+}
+
+.timer-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: var(--brown-100);
+  border-radius: 2px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.timer-bar {
+  height: 100%;
+  background: var(--brown-600);
+  border-radius: 2px;
+  transition: width 0.9s linear;
+  width: 0%;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.t-btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  transition: background 0.12s, transform 0.1s;
+}
+
+.t-btn:active { transform: scale(0.97); }
+.t-btn.primary { background: var(--brown-800); color: var(--brown-100); border-color: transparent; }
+.t-btn.primary:active { background: var(--brown-700); }
+
+/* ── RESPONSIVE TWEAKS ── */
+@media (max-width: 360px) {
+  .timer-display { font-size: 52px; }
+  .stat-value { font-size: 15px; }
+  .stat-label { font-size: 8px; }
+}
+
+@media (min-width: 540px) {
+  .main { padding-top: 24px; }
+  .stats-grid { grid-template-columns: repeat(5, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#F5EBE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3 L18 3 L15 18 L9 18 Z"/>
+      <path d="M8 8 Q12 10 16 8"/>
+      <path d="M8.5 12 Q12 13.5 15.5 12"/>
+      <circle cx="12" cy="20.5" r="1.2" fill="#F5EBE0" stroke="none"/>
+    </svg>
+  </div>
+  <div class="app-header-text">
+    <h1>Manual <em>Brew</em> Guide</h1>
+    <p>Craft your perfect cup, step by step</p>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- FORM CARD -->
+  <div class="card">
+    <div class="card-body">
+      <div class="card-section-label">Brewing parameters</div>
+
+      <div class="form-row">
+        <label>Coffee variety</label>
+        <div class="select-wrap">
+          <select id="variety">
+            <optgroup label="🇮🇩 Indonesia — Sumatra">
+              <option value="gayo">Aceh Gayo (Sumatra)</option>
+              <option value="mandheling">Sumatra Mandheling</option>
+              <option value="lintong">Lintong (North Sumatra)</option>
+            </optgroup>
+            <optgroup label="🇮🇩 Indonesia — Java">
+              <option value="java_ijen">Java Ijen (East Java)</option>
+              <option value="argopuro">Argopuro / Hyang (East Java)</option>
+            </optgroup>
+            <optgroup label="🇮🇩 Indonesia — Bali & Sulawesi">
+              <option value="kintamani">Bali Kintamani</option>
+              <option value="toraja">Sulawesi Toraja</option>
+            </optgroup>
+            <optgroup label="🇮🇩 Indonesia — Flores & Papua">
+              <option value="flores_bajawa">Flores Bajawa (NTT)</option>
+              <option value="wamena">Papua Wamena</option>
+            </optgroup>
+            <optgroup label="🌍 Africa">
+              <option value="ethiopian">Ethiopian Yirgacheffe</option>
+              <option value="kenyan">Kenyan AA</option>
+              <option value="rwandan">Rwandan Huye Mountain</option>
+            </optgroup>
+            <optgroup label="🌎 Americas">
+              <option value="colombian">Colombian Huila</option>
+              <option value="guatemalan">Guatemalan Antigua</option>
+              <option value="brazilian">Brazilian Santos</option>
+              <option value="panama">Panama Geisha</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Roast level</label>
+        <div class="select-wrap">
+          <select id="roast">
+            <option value="light">Light roast</option>
+            <option value="medium-light">Medium-light roast</option>
+            <option value="medium" selected>Medium roast</option>
+            <option value="medium-dark">Medium-dark roast</option>
+            <option value="dark">Dark roast</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Brew method</label>
+        <div class="select-wrap">
+          <select id="method">
+            <option value="v60">Hario V60</option>
+            <option value="chemex">Chemex</option>
+            <option value="frenchpress">French Press</option>
+            <option value="aeropress">AeroPress</option>
+            <option value="mokaPot">Moka Pot</option>
+            <option value="coldBrew">Cold Brew</option>
+            <option value="siphon">Siphon / Vacuum Pot</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Coffee amount (g)</label>
+        <input type="number" id="coffeeGrams" value="15" min="5" max="150" step="0.5" inputmode="decimal"/>
+      </div>
+
+      <div class="form-row">
+        <label>Grind size</label>
+        <div class="select-wrap">
+          <select id="grindSize" onchange="updateGrindHint()">
+            <option value="auto">Auto — recommended for method</option>
+            <option value="extra-fine">Extra fine — Turkish style</option>
+            <option value="fine">Fine — espresso-like</option>
+            <option value="medium-fine">Medium fine — V60 / AeroPress</option>
+            <option value="medium">Medium — flat-bottom drip</option>
+            <option value="medium-coarse">Medium coarse — Chemex / Siphon</option>
+            <option value="coarse">Coarse — French Press / cold brew</option>
+            <option value="extra-coarse">Extra coarse — cold brew concentrate</option>
+          </select>
+        </div>
+        <div class="grind-hint" id="grindHint">Select a method to auto-recommend grind size.</div>
+      </div>
+
+      <button class="brew-btn" onclick="generateGuide()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3 L19 3 L16 19 L8 19 Z"/>
+          <circle cx="12" cy="21.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        Generate brewing guide
+      </button>
+    </div>
+  </div>
+
+  <!-- GUIDE SECTION -->
+  <div id="guideSection">
+
+    <!-- Recipe card -->
+    <div class="card" style="overflow:hidden;">
+      <div class="recipe-header">
+        <div class="origin-pill" id="originBadge">🇮🇩 Sumatra, Indonesia</div>
+        <div class="recipe-title" id="recipeTitle">V60 · Aceh Gayo</div>
+        <div class="recipe-subtitle" id="recipeSubtitle">Medium roast · medium-fine grind</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">Coffee</div>
+          <div class="stat-value" id="statCoffee">15</div>
+          <div class="stat-unit">g</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Water</div>
+          <div class="stat-value" id="statWater">248</div>
+          <div class="stat-unit">ml</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Ratio</div>
+          <div class="stat-value" id="statRatio">1:16</div>
+          <div class="stat-unit"></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Temp</div>
+          <div class="stat-value" id="statTemp">92</div>
+          <div class="stat-unit">°C</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Grind</div>
+          <div class="stat-value" id="statGrind" style="font-size:12px;line-height:1.3;padding-top:4px">Med-fine</div>
+          <div class="stat-unit"></div>
+        </div>
+      </div>
+
+      <div class="taste-notes" id="tasteNotes"></div>
+
+      <div class="steps-section">
+        <div class="steps-label">Brewing steps</div>
+        <div id="stepsContainer"></div>
+      </div>
+    </div>
+
+    <!-- Timer card -->
+    <div class="card timer-card">
+      <div class="card-body">
+        <div class="timer-top-label">Brew timer</div>
+        <div class="timer-phase" id="timerPhase">Ready to brew</div>
+        <div class="timer-display" id="timerDisplay">0:00</div>
+        <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+        <div class="timer-controls">
+          <button class="t-btn" onclick="resetTimer()">Reset</button>
+          <button class="t-btn primary" id="startBtn" onclick="toggleTimer()">Start timer</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end guideSection -->
+</main>
+
+<script>
+const VARIETIES = {
+  gayo:          { label:'Aceh Gayo', origin:'🇮🇩 Sumatra, Indonesia', notes:'Milk chocolate, brown sugar, caramel, and roasted nuts with gentle citrus and herbal accents. Medium-full body, soft and well-integrated acidity. One of Indonesia\'s most respected GI-certified highland Arabicas, grown at 1,100–1,600 m in the Gayo Highlands.' },
+  mandheling:    { label:'Sumatra Mandheling', origin:'🇮🇩 Sumatra, Indonesia', notes:'Bold and earthy with dark chocolate, cedar, and tobacco notes. Signature syrupy body from traditional wet-hulling (giling basah). Very low acidity — the quintessential heavy Sumatran cup. Best in French Press or Moka Pot.' },
+  lintong:       { label:'Lintong', origin:'🇮🇩 North Sumatra, Indonesia', notes:'Herbal and spicy with a clean, bright finish. Slightly sweeter and more complex than Mandheling. Earthy cocoa undertones balanced by a gentle citric lift. Grown near the shores of Lake Toba.' },
+  java_ijen:     { label:'Java Ijen', origin:'🇮🇩 East Java, Indonesia', notes:'Fresh nutty aroma, clean chocolate, high and bright acidity, medium body. Full-washed processing gives it more clarity than wet-hulled Sumatran coffees. Floral and malty sweetness sets it apart — excellent for pour-over.' },
+  argopuro:      { label:'Argopuro / Hyang', origin:'🇮🇩 East Java, Indonesia', notes:'Spicy, nutty, and caramelly with distinctive aromatic warmth. Grown on the slopes of Hyang Argopuro mountains in Bondowoso at 900–1,300 m. Holds a Geographical Indication certificate (GI) since 2020. Rich body, long finish.' },
+  kintamani:     { label:'Bali Kintamani', origin:'🇮🇩 Bali, Indonesia', notes:'Bright citrus and floral aromas with a clean, light body and low bitterness. Farmers intercrop coffee with citrus trees — this "tumpang sari" practice gives the coffee its signature fresh character. Indonesia\'s first GI-certified coffee (2008).' },
+  toraja:        { label:'Sulawesi Toraja', origin:'🇮🇩 Sulawesi, Indonesia', notes:'Known as the "Queen of Coffee." Full-bodied and winey with layered ripe fruit, dark chocolate, nutty warmth, and a hint of black pepper. Creamy texture, medium acidity, and a long lingering finish. Grown at 1,200–2,000 m.' },
+  flores_bajawa: { label:'Flores Bajawa', origin:'🇮🇩 Nusa Tenggara, Indonesia', notes:'Hazelnut, caramel, and floral with woody sweetness and moderate acidity. One of Indonesia\'s most filter-friendly origins — cocoa-forward with a citric lift and a polished clean finish. Small-batch sun-dried by Bajawa mountain communities.' },
+  wamena:        { label:'Papua Wamena', origin:'🇮🇩 Papua, Indonesia', notes:'Grown wild at 1,400–2,500 m in remote rainforest only accessible by air or foot. Thick, syrupy body with caramel, dark chocolate, and floral hints, plus an unusual apple-wine quality. Organically cultivated — among the rarest Indonesian coffees.' },
+  ethiopian:     { label:'Ethiopian Yirgacheffe', origin:'🌍 Ethiopia', notes:'Bright floral notes of jasmine and bergamot, blueberry, and vibrant citrus acidity. The birthplace of coffee itself. Exceptional for light roasts where complexity and delicate aromatics can fully express.' },
+  kenyan:        { label:'Kenyan AA', origin:'🌍 Kenya', notes:'Bold blackcurrant, tomato, and wine-like acidity. Full body with a lingering, complex finish. Kenya\'s SL28 and SL34 varietals are among the most prized in specialty coffee worldwide.' },
+  rwandan:       { label:'Rwandan Huye Mountain', origin:'🌍 Rwanda', notes:'Stone fruit, brown sugar, and a creamy body with moderate acidity. Bourbon varietal from the Huye highlands. Clean, sweet, and consistently excellent across all roast profiles.' },
+  colombian:     { label:'Colombian Huila', origin:'🌎 Colombia', notes:'Balanced caramel sweetness, red apple, and mild citrus. Grown in Colombia\'s highest coffee-producing department. A crowd-pleasing, well-rounded cup that performs across all brew methods.' },
+  guatemalan:    { label:'Guatemalan Antigua', origin:'🌎 Guatemala', notes:'Chocolate, brown sugar, and subtle spice from volcanic soil. Medium body, gentle acidity, and a smooth finish. One of Central America\'s most celebrated growing regions.' },
+  brazilian:     { label:'Brazilian Santos', origin:'🌎 Brazil', notes:'Nutty, low-acid, with chocolate and peanut character. Natural-processed with heavy body and soft sweetness. Great for dark roasts, espresso blends, and those who prefer a mellow approachable cup.' },
+  panama:        { label:'Panama Geisha', origin:'🌎 Panama', notes:'Legendary floral jasmine, stone fruit, and bergamot. Delicate tea-like body with extraordinary complexity. Best expressed at light roast in a pour-over. Among the highest-scoring coffees in the world.' },
+};
+
+const METHOD_LABELS = { v60:'Hario V60', chemex:'Chemex', frenchpress:'French Press', aeropress:'AeroPress', mokaPot:'Moka Pot', coldBrew:'Cold Brew', siphon:'Siphon / Vacuum Pot' };
+const METHOD_DEFAULT_GRIND = { v60:'medium-fine', chemex:'medium-coarse', frenchpress:'coarse', aeropress:'medium-fine', mokaPot:'fine', coldBrew:'coarse', siphon:'medium-coarse' };
+const GRIND_SHORT = { 'extra-fine':'Extra fine','fine':'Fine','medium-fine':'Med-fine','medium':'Medium','medium-coarse':'Med-coarse','coarse':'Coarse','extra-coarse':'Xtra coarse' };
+const GRIND_DESC = {
+  'extra-fine': 'Extra fine — powdery, like Turkish coffee',
+  'fine': 'Fine — like table salt, slightly gritty',
+  'medium-fine': 'Medium fine — like sand (ideal for V60 / AeroPress)',
+  'medium': 'Medium — like coarse sand (drip / flat-bottom)',
+  'medium-coarse': 'Medium coarse — like rough sand (Chemex / Siphon)',
+  'coarse': 'Coarse — chunky like sea salt (French Press / cold brew)',
+  'extra-coarse': 'Extra coarse — very chunky (cold brew concentrate)',
+};
+
+const ROAST_RATIO_DELTA = { light:-1.5, 'medium-light':-0.75, medium:0, 'medium-dark':0.75, dark:1.5 };
+const ROAST_TEMP = { light:96, 'medium-light':94, medium:92, 'medium-dark':90, dark:88 };
+
+const BASE_RECIPE = {
+  v60:        { ratio:16.5, steps:(c,w,t)=>[
+    {name:'Rinse filter',desc:'Place filter in V60, rinse with hot water to remove paper taste. Discard rinse water.',time:'0:00',dur:20},
+    {name:'Add grounds',desc:`Add ${c}g of medium-fine ground coffee. Shake gently to level the bed.`,time:'0:20',dur:15},
+    {name:'Bloom',desc:`Pour ${Math.round(c*2.5)}ml of ${t}°C water in circles from center outward. Wait for CO₂ to degas.`,time:'0:35',dur:35},
+    {name:'First pour',desc:`Slowly pour to ${Math.round(w*0.4)}ml total in steady spirals. Keep water below the rim.`,time:'1:10',dur:40},
+    {name:'Second pour',desc:`Add water to ${Math.round(w*0.75)}ml total, pouring in smooth circles.`,time:'1:50',dur:35},
+    {name:'Final pour',desc:`Pour remaining water to reach ${w}ml. Total brew time: ~3:00–3:30.`,time:'2:25',dur:35},
+    {name:'Drawdown',desc:'Let all water drain through. Remove dripper and enjoy.',time:'3:00',dur:30},
+  ]},
+  chemex:     { ratio:15.5, steps:(c,w,t)=>[
+    {name:'Fold & rinse filter',desc:'Fold Chemex filter (3 layers toward spout). Rinse thoroughly with hot water. Discard rinse.',time:'0:00',dur:30},
+    {name:'Add grounds',desc:`Add ${c}g of medium-coarse ground coffee. Shake gently to level.`,time:'0:30',dur:10},
+    {name:'Bloom pour',desc:`Pour ${Math.round(c*2.5)}ml of ${t}°C water starting at center. Saturate all grounds.`,time:'0:40',dur:30},
+    {name:'Bloom rest',desc:'Wait 45 seconds for bloom to complete and CO₂ to escape.',time:'1:10',dur:45},
+    {name:'Main pour 1',desc:`Pour steadily to ${Math.round(w*0.5)}ml total. Maintain slow, steady circles.`,time:'1:55',dur:60},
+    {name:'Main pour 2',desc:`Continue pouring to ${Math.round(w*0.8)}ml total. Keep the brew level stable.`,time:'2:55',dur:60},
+    {name:'Final pour',desc:`Pour remaining water to reach ${w}ml. Total brew: 4:00–4:30.`,time:'3:55',dur:60},
+  ]},
+  frenchpress:{ ratio:14.5, steps:(c,w,t)=>[
+    {name:'Preheat press',desc:'Pour hot water into French Press to warm the vessel. Discard.',time:'0:00',dur:20},
+    {name:'Add grounds',desc:`Add ${c}g of coarsely ground coffee to the press.`,time:'0:20',dur:10},
+    {name:'Initial pour',desc:`Pour ${Math.round(w*0.5)}ml of ${t}°C water. Ensure all grounds are saturated.`,time:'0:30',dur:20},
+    {name:'Stir & bloom',desc:'Gently stir to break the crust. Wait 30 seconds for bloom.',time:'0:50',dur:30},
+    {name:'Full pour',desc:`Add remaining water to reach ${w}ml. Place lid on — do not press yet.`,time:'1:20',dur:20},
+    {name:'Steep',desc:'Let steep undisturbed for 3:30 minutes.',time:'1:40',dur:210},
+    {name:'Press & serve',desc:'Press plunger slowly and steadily (~30 sec). Pour immediately to avoid over-extraction.',time:'5:10',dur:30},
+  ]},
+  aeropress:  { ratio:13.5, steps:(c,w,t)=>[
+    {name:'Set up AeroPress',desc:'Insert paper filter in cap, rinse with hot water. Attach cap and place on a sturdy mug.',time:'0:00',dur:20},
+    {name:'Add grounds',desc:`Add ${c}g of medium-fine ground coffee into the chamber.`,time:'0:20',dur:10},
+    {name:'Add water',desc:`Pour ${w}ml of ${t}°C water. Stir 3–4 times to fully saturate.`,time:'0:30',dur:20},
+    {name:'Steep',desc:'Insert plunger slightly to create a seal. Steep for 1:30 minutes.',time:'0:50',dur:90},
+    {name:'Press',desc:'Apply gentle, steady pressure over 20–30 seconds. Stop when you hear hissing.',time:'2:20',dur:30},
+    {name:'Dilute if desired',desc:`Add ${Math.round(w*0.5)}ml hot water for a longer cup. Serve immediately.`,time:'2:50',dur:10},
+  ]},
+  mokaPot:    { ratio:10, steps:(c,w,t)=>[
+    {name:'Fill boiler',desc:`Fill the bottom chamber with ${w}ml of pre-heated water up to the safety valve.`,time:'0:00',dur:30},
+    {name:'Add grounds',desc:`Fill the filter basket with ${c}g of finely ground coffee. Level without tamping.`,time:'0:30',dur:15},
+    {name:'Assemble & heat',desc:'Screw the top chamber firmly. Place on low-medium heat.',time:'0:45',dur:20},
+    {name:'Watch the brew',desc:'Coffee will bubble up through the funnel. Keep lid open to observe the flow.',time:'1:05',dur:180},
+    {name:'Remove from heat',desc:'When you hear a gurgling or hissing sound, remove from heat immediately.',time:'4:05',dur:15},
+    {name:'Cool base & serve',desc:'Run cold water over the base to stop extraction. Pour and enjoy.',time:'4:20',dur:20},
+  ]},
+  coldBrew:   { ratio:7.5, steps:(c,w,t)=>[
+    {name:'Coarse grind',desc:`Grind ${c}g of coffee very coarsely — like chunky sea salt.`,time:'',dur:30},
+    {name:'Combine',desc:`Combine grounds with ${w}ml of cold or room-temperature water in a jar or pitcher.`,time:'',dur:20},
+    {name:'Stir gently',desc:'Stir to ensure all grounds are saturated. Do not agitate vigorously.',time:'',dur:10},
+    {name:'Steep — refrigerator',desc:'Cover and refrigerate for 12–24 hours. Longer steep = stronger concentrate.',time:'',dur:60},
+    {name:'Filter',desc:'Strain through a fine mesh sieve, then through a paper filter or cheesecloth.',time:'',dur:30},
+    {name:'Serve',desc:`Dilute 1:1 with water or milk if brewed as concentrate. Keeps 2 weeks refrigerated.`,time:'',dur:10},
+  ]},
+  siphon:     { ratio:15, steps:(c,w,t)=>[
+    {name:'Fill lower vessel',desc:`Add ${w}ml of pre-heated water to the lower globe. Attach the upper chamber.`,time:'0:00',dur:30},
+    {name:'Insert filter',desc:'Drop the cloth or metal filter into the upper chamber and pull the chain through the tube.',time:'0:30',dur:20},
+    {name:'Apply heat',desc:'Place on heat source. Water will rise to the upper chamber as it heats (~1:30 min).',time:'0:50',dur:90},
+    {name:'Add grounds',desc:`Once water rises, add ${c}g of medium-coarse coffee. Stir gently to immerse.`,time:'2:20',dur:15},
+    {name:'Brew',desc:'Maintain steady heat. Brew for 60–90 seconds, stirring once midway.',time:'2:35',dur:75},
+    {name:'Remove heat',desc:'Remove heat source. Coffee will filter back down into the lower vessel.',time:'3:50',dur:60},
+    {name:'Serve',desc:'Remove upper chamber carefully. Pour from the lower globe immediately.',time:'4:50',dur:20},
+  ]},
+};
+
+let phaseTimings=[], totalSeconds=0, timerSeconds=0, timerRunning=false, timerInterval=null;
+
+function updateGrindHint() {
+  const sel = document.getElementById('grindSize').value;
+  const hint = document.getElementById('grindHint');
+  hint.textContent = sel === 'auto'
+    ? 'Will auto-select the recommended grind for your chosen method.'
+    : (GRIND_DESC[sel] || '');
+}
+
+function generateGuide() {
+  const variety = document.getElementById('variety').value;
+  const roast = document.getElementById('roast').value;
+  const method = document.getElementById('method').value;
+  const grams = parseFloat(document.getElementById('coffeeGrams').value) || 15;
+  const grindSel = document.getElementById('grindSize').value;
+  const grind = grindSel === 'auto' ? METHOD_DEFAULT_GRIND[method] : grindSel;
+
+  const baseRatio = BASE_RECIPE[method].ratio;
+  const ratio = +(baseRatio + ROAST_RATIO_DELTA[roast]).toFixed(1);
+  const water = Math.round(grams * ratio);
+  const temp = ROAST_TEMP[roast];
+  const varData = VARIETIES[variety];
+  const steps = BASE_RECIPE[method].steps(grams, water, temp);
+
+  document.getElementById('originBadge').textContent = varData.origin;
+  document.getElementById('recipeTitle').textContent = METHOD_LABELS[method] + ' · ' + varData.label;
+  document.getElementById('recipeSubtitle').textContent =
+    document.getElementById('roast').options[document.getElementById('roast').selectedIndex].text +
+    ' · ' + (GRIND_DESC[grind]||'').split('—')[0].trim();
+
+  document.getElementById('statCoffee').textContent = grams;
+  document.getElementById('statWater').textContent = water;
+  document.getElementById('statRatio').textContent = '1:' + ratio.toFixed(1);
+  document.getElementById('statTemp').textContent = method === 'coldBrew' ? 'Cold' : temp;
+  document.getElementById('statGrind').textContent = GRIND_SHORT[grind] || grind;
+
+  document.getElementById('tasteNotes').innerHTML =
+    '<strong>Origin:</strong> ' + varData.origin + '<br><strong>Tasting notes:</strong> ' + varData.notes;
+
+  const container = document.getElementById('stepsContainer');
+  container.innerHTML = '';
+  steps.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'step-item';
+    el.innerHTML = '<div class="step-num">'+(i+1)+'</div><div class="step-content"><div class="step-name">'+s.name+'</div><div class="step-desc">'+s.desc+'</div>'+(s.time?'<div class="step-time">At '+s.time+'</div>':'')+'</div>';
+    container.appendChild(el);
+  });
+
+  phaseTimings = steps;
+  totalSeconds = steps.reduce((a,s)=>a+s.dur,0);
+  resetTimer();
+
+  const guide = document.getElementById('guideSection');
+  guide.classList.add('visible');
+  setTimeout(()=>guide.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function formatTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+function updateTimerUI(){
+  document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
+  const pct = totalSeconds>0 ? Math.min(100,(timerSeconds/totalSeconds)*100):0;
+  document.getElementById('timerBar').style.width = pct+'%';
+  let elapsed=0, phase=phaseTimings[phaseTimings.length-1];
+  for(let i=0;i<phaseTimings.length;i++){
+    elapsed+=phaseTimings[i].dur;
+    if(timerSeconds<elapsed||i===phaseTimings.length-1){phase=phaseTimings[i];break;}
+  }
+  document.getElementById('timerPhase').textContent = timerSeconds>=totalSeconds ? 'Brewing complete!' : phase.name;
+}
+
+function toggleTimer(){
+  if(timerRunning){
+    clearInterval(timerInterval); timerRunning=false;
+    document.getElementById('startBtn').textContent='Resume';
+  } else {
+    timerRunning=true;
+    document.getElementById('startBtn').textContent='Pause';
+    timerInterval=setInterval(()=>{
+      timerSeconds++; updateTimerUI();
+      if(timerSeconds>=totalSeconds){clearInterval(timerInterval);timerRunning=false;document.getElementById('startBtn').textContent='Done';}
+    },1000);
+  }
+}
+
+function resetTimer(){
+  clearInterval(timerInterval); timerRunning=false; timerSeconds=0;
+  document.getElementById('startBtn').textContent='Start timer';
+  document.getElementById('timerPhase').textContent='Ready to brew';
+  document.getElementById('timerDisplay').textContent='0:00';
+  document.getElementById('timerBar').style.width='0%';
+}
+
+updateGrindHint();
+</script>
+</body>
+</html>
